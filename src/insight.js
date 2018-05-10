@@ -1,32 +1,33 @@
 const _fetch = require("node-fetch");
 const express = require("express");
+const promise = require("./promise");
 
-module.exports = function(coin){
+module.exports = function (coin) {
   const app = new express.Router();
 
-  function routeGet(req,res) {
+  function routeGet(req, res) {
     console.log(req.path);
     const r = coin.explorers
-      .map(ex=>_fetch(ex+req.path).then(r=>r.json()));
-    const prom = Promise.race(r);
+      .map(ex => _fetch(ex + req.path).then(r => r.json()));
+    const prom = promise.firstResolve(r);
     prom.then(res.send.bind(res))
-        .catch(err => {
-          res.status(500).send(err);
-          console.log(err);
-        });
+      .catch(err => {
+        res.status(500).send(err);
+        console.log(err);
+      });
   }
-  function routePost(req,res){
+  function routePost(req, res) {
     console.log(req.path);
-    const r = coin.explorers.map(ex=>_fetch(ex+req.path,{
+    const r = coin.explorers.map(ex => _fetch(ex + req.path, {
       method: 'POST',
       body: req.body
     }).then(r => r.json()));
-    const prom = Promise.race(r);
+    const prom = Promise.firstResolve(r);
     prom.then(res.send.bind(res))
-        .catch(err => {
-          res.status(500).send(err);
-          console.log(err);
-        });
+      .catch(err => {
+        res.status(500).send(err);
+        console.log(err);
+      });
   }
 
   app.get('/blocks', routeGet);

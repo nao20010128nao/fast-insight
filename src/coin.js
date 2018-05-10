@@ -43,7 +43,7 @@ module.exports = {
             "https://btc-bitcore4.trezor.io/api",
             "https://btc-bitcore5.trezor.io/api",
             "https://btc-bitcore2.trezor.io/api",
-            "https://insight.bitpay.com"
+            "https://insight.bitpay.com/api"
         ],
         lib: "btc",
         network: {
